@@ -35,7 +35,7 @@ for (var i = 0; i < number ; i++) {
 
 	for (var i =  0; i < column.data.children.length; i++) {
 
-		console.log(column.data)
+		// console.log(column.data)
 
 		var article = { "data": {
 			"title"		: column.data.children[i].data.title,
@@ -45,7 +45,7 @@ for (var i = 0; i < number ; i++) {
 			"domain"	: column.data.children[i].data.domain
 				}
 			};
-  		// article.data.url = test(article.data.url);
+  		article.data.url = fix(article.data.url, article.data.domain);
   		html = Mustache.render(articleTemplate, article.data);
 
   		array.push(html);
@@ -53,9 +53,8 @@ for (var i = 0; i < number ; i++) {
 
 
   		// $(html).appendTo(column);
-
 		}
-		console.log(array);
+		// console.log(array);
 		column = Mustache.render(colTemplate, {"articles" : array });
 
   		$(column).appendTo('#wrapper');
@@ -76,9 +75,23 @@ for (var i = 0; i < number ; i++) {
 
 // loadColumn("wtf");
 
-// function test(object) {
+function fix(url, domain) {
   		// console.log(object);
+  	if (domain == "i.imgur.com")
+	{	console.log("good" + domain);
+  		return url;
+	}
+  	else if (domain == "imgur.com")
+	{	console.log("fix" + domain);
+  	
+  		return "http://i.imgur.com/" + url.slice(17) + ".jpg";
+  	}
+  	else 
+  	{
+  		return url;
+  	}
 
+};
 	// object = "blah.com";
 	// return object;
   		// console.log(object);
