@@ -1,17 +1,10 @@
-var scripts = ['js/jquery.animate-enhanced.min.js', 'jquery.easing.min.js', 'js/**/*.js', '!js/scripts.js'];
+var scripts = ['js/mustache.js', 'js/templates.js', 'js/**/*.js', '!js/scripts.js'];
 
 module.exports = function (grunt) {
 
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-
-    jshint: {
-      options: {
-        force: true
-      },
-      all: scripts + ['!js/jquery-1.9.1.js', '!js/jquery.animate-enhanced.min.js', '!jquery.easing.min.js']
-    },
 
     concat: {
       dist: {
@@ -30,7 +23,6 @@ module.exports = function (grunt) {
 
     compass: {
       options: {
-        require: 'susy',
         sassDir: 'sass',
         cssDir: 'css'
       },
@@ -57,7 +49,7 @@ module.exports = function (grunt) {
       },
       scripts: {
         files: scripts,
-        tasks: ['jshint', 'concat']
+        tasks: ['concat']
       },
       styles: {
         files: ['sass/**/*.{sass,scss}'],
@@ -65,27 +57,26 @@ module.exports = function (grunt) {
       }
     },
 
-    exec: {
-      serverup: {
-        command: '/Applications/MAMP/bin/start.sh'
-      },
-      serverdown: {
-        command: '/Applications/MAMP/bin/stop.sh'
+connect: {
+      server: {
+        options: {
+          port: 8888,
+          hostname: '*'
+        }
       }
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-smushit');
-  grunt.loadNpmTasks('grunt-exec');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Development task checks and concatenates JS, compiles SASS preserving comments and nesting, runs dev server, and starts watch
-  grunt.registerTask('default', ['jshint', 'concat', 'compass:dev', 'exec:serverup', 'watch', 'exec:serverdown']);
+  grunt.registerTask('default', ['concat', 'compass:dev', 'connect:server', 'watch']);
   // Build task builds minified versions of static files
-  grunt.registerTask('build', ['jshint', 'compass:production', 'concat', 'uglify', 'smushit']);
+  grunt.registerTask('build', ['compass:production', 'concat', 'uglify', 'smushit']);
 
 };

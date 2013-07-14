@@ -1,44 +1,124 @@
+/* line 15, ../sass/_reset.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+/* line 25, ../sass/_reset.scss */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+/* line 28, ../sass/_reset.scss */
 body {
-	background-color: rgb(206,227,248);
+  line-height: 1;
 }
 
+/* line 31, ../sass/_reset.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 34, ../sass/_reset.scss */
+blockquote, q {
+  quotes: none;
+}
+
+/* line 38, ../sass/_reset.scss */
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+/* line 42, ../sass/_reset.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 6, ../sass/style.sass */
+.cf:before, .cf:after {
+  content: " ";
+  display: table;
+}
+
+/* line 10, ../sass/style.sass */
+.cf:after {
+  clear: both;
+}
+
+/* line 14, ../sass/style.sass */
+body {
+  background-color: #cee3f8;
+  text-align: center;
+}
+
+/* line 18, ../sass/style.sass */
+#wrapper {
+  display: inline-block;
+}
+
+/* line 21, ../sass/style.sass */
 #column {
-	width: 320px;
-	list-style-type: none;
-	/*display: inline-block;*/
-	float: left;
-	/*background-color: black;*/
-	/*height: 500px;*/
-
+  bottom: 1386px;
+  width: 320px;
+  list-style-type: none;
+  margin: 10px;
+  float: left;
+  /*background-color: black; */
+  /*height: 500px; */
 }
 
+/* line 31, ../sass/style.sass */
 #column h1 {
-	font-size: 1.5em;
-	padding: 0 10px;
-
-
+  font-size: 1.5em;
+  padding: 0 10px;
+  text-align: center;
 }
 
+/* line 36, ../sass/style.sass */
 .article {
-	background-color: rgb(255,255,255);
-	width: 100%;
-	min-height: 300px;
-	margin: 10px 0;
-	color: #666;
+  background-color: white;
+  width: 100%;
+  min-height: 300px;
+  margin: 20px 0;
+  color: #666666;
 }
 
+/* line 43, ../sass/style.sass */
 .article img {
-	width: 100%;
-	/*max-height: 200px;*/
+  width: 100%;
+  /*max-height: 200px; */
 }
 
+/* line 47, ../sass/style.sass */
 .imageBox {
-	border-radius: 5px;
-	padding: 10px;
-	border: 2px 0 outset;
+  border-radius: 5px;
+  padding: 10px;
+  border: 2px 0 outset;
 }
 
+/* line 52, ../sass/style.sass */
 .comment {
-	margin: 0;
-	padding: 0 10px;
+  margin: 0;
+  padding: 0 10px;
 }
