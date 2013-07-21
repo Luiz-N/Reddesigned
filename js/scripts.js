@@ -534,12 +534,15 @@
   };
 
 }));
-var colTemplate = '														\
-<ul class="column" data-column = {{column}} data-subreddit = {{subreddit}}>\
-	<input type="text" id={{column}} placeholder={{subreddit}}>						\
-	{{#articles}} 														\
-		{{{.}}} 														\
-	{{/articles}} 														\
+var column = '															\
+<div class = "column" data-column={{column}}>														\
+<span class = "r">r/</span><input id ={{column}} type="text" placeholder={{subreddit}}>	\
+</div>																	\
+';
+
+
+var subredditTemplate = '														\
+<ul class="stack" id = {{subreddit}}>						\
 </ul> 																	\
 ';
 
@@ -564,214 +567,220 @@ var commentTemplate = '													\
 																		\
 	</aside>															\
 ';
-singleCol = "";
+function NewComment(article, parent){
+	// console.log(article.data.id);
+	url = "http://reddit.com/comments/" + article.data.id + ".json?limit=1&sort=hot&jsonp=?";
 
-$(document).ready( function() {
-
-maxCols = Math.floor(window.innerWidth / 340);
-// console.log(($(window).width()/340).floor);
-console.log(maxCols);
-
-$("#wrapper").css({'width': maxCols*340});
-
-// console.log(number);
-
-subs = ["", "r/pics", "r/funny", "r/aww", "r/gif"];
-
-
-
-	for (var i=0; i <= maxCols - 1; i++) {
-		loadSubreddit(subs[i], maxCols);
-	};
-
-// setTimeout(loadComments(),5000);
+	$.getJSON( url, function(json){
+		object = { "data": {
+			"id"		: json[0].data.children[0].data.id,
+			"comment"	: marked(json[1].data.children[0].data.body),
+			"author"	: json[1].data.children[0].data.author
+			}
+		};
+		comment = Mustache.render(commentTemplate, object.data);
+		// console.log(parent);
+		parent.append(comment);
 
 
-function loadSubreddit(sub, num, col) {
-ids = [];
-counter = 0;
-
-
-	// $.getJSON( "http://reddit.com/subreddits/search/fist", function(page){
-	// 	console.log(page);
-	// 	console.log("loaded!");
-
-
-	// });
-
-	// if (sub === "r/random") {
-	// 	subReddit = getRandom(sub);
-	// }
-	// else {
-	// 	subReddit = "http://reddit.com/" + sub + ".json?jsonp=?";
-	// }
-
-		subReddit = "http://reddit.com/" + sub + ".json?jsonp=?";
-
-
-	$.getJSON( subReddit, function(page){
-		console.log(page);
-
-	array = [];
-	// console.log(page.data.children[0]);
-
-	for (var n =  0, len = page.data.children.length; n < len; n++) {
-
-		article = { "data": {
-			"author"	: page.data.children[n].data.author,
-			// "column"	: column,
-			"subreddit"	: page.data.children[n].data.subreddit,
-			"index"		: n,
-			"title"		: page.data.children[n].data.title,
-			"permalink"	: page.data.children[n].data.permalink,
-			"url"		: page.data.children[n].data.url,
-			"id"		: page.data.children[n].data.id,
-			"domain"	: page.data.children[n].data.domain,
-			"over_18"	: page.data.children[n].data.over_18
-				}
-			};
-
-		ids.push(article.data.id);
-  		article.data.url = fix(article.data.url, article.data.domain);
-		// article.data.column = column;
-  		html = Mustache.render(articleTemplate, article.data);
-
-  		array.push(html);
-
-  	};
-  		column = col || subs.indexOf(sub);
-
-  		object = { "data" : {
-  			"articles" 	: array,
-  			"subreddit"	: column === 0 ? "" : sub.slice(2),
-  			"column"	: column
-  					}
-  		};
-
-
-
-		singleCol = Mustache.render(colTemplate, object.data);
-
-  		$(singleCol).appendTo("#wrapper");
-
-
-  		counter++;
-  		console.log("counter: " + counter);
-  		console.log("n: " + num);
-
-
-		if (counter == num) { 
-  		loadComments(ids, object.data.column);
-		 }
-
-  	
 	});
+
+}
+function NewArticle(object, col) {
+	this.article = $("div[data-column="+col+"] " +"li[data-id="+object.data.id+"]");
+	this.url = this.article.find('img');
+
+	// console.log(this.article);
+	// console.log(object.data.id);
+
+	new NewComment(object, this.article);
+
 }
 
-function loadComments(ids, column) {
-
-
-	check = [];
-
-	console.log("executed");
-		console.log(column);
+function NewSubreddit(subreddit, col) {
 
 
 
-	for (var i = 0, len = ids.length; i < len; i++) {
+	if (subreddit === "r/random") {
+		subReddit = getRandom(subreddit);
+	}
+	else if (subreddit === "reddit") {
+		link = "http://reddit.com/" + "" + ".json?jsonp=?";
+	}
+	else {
+		link = "http://reddit.com/" + subreddit + ".json?jsonp=?";
+	}
 
-		url = "http://reddit.com/comments/" + ids[i] + ".json?limit=1&sort=hot&jsonp=?";
 
-		$.getJSON( url, function(json){
-		// console.log(json);
+	// this.stack = $("<ul>")
+	// 					.attr("class", "stack")
+	// 					.appendTo("<div>").attr(data-column = col)
+
+	html = Mustache.render(subredditTemplate, {"subreddit": subreddit});
+	this.col = $("div[data-column="+col+"]");
+
+	this.col.append(html);
+	// console.log(this.col.children());
+
+	this.stack = this.col.children(".stack:last-child");
+
+        	console.log(this.stack.outerHeight());
+
+	$(document).scroll(function() {
+
+        var top = $(document).scrollTop();
+        	console.log(this.stack);
+
+        if (top > 300) {
+
+        	console.log(this.stack);
+            // $('#one').show();
+        }
+        else if (top > 600) {
+            // $('#two').show();
+        } 
+        else {
+            // $('.feature').hide();
+        }   
+
+    });
 
 
+
+	var stack = this;
+	// console.log(link);
+	array = [];
+	array2 = [];
+
+	$.ajax( link, {
+		dataType: 'json',
+		context: stack,
+		success: function(page){
+			// console.log(page);
+
+		
+		// console.log(page.data.children[0]);
+
+		for (var n = page.data.children.length - 1; n >= 0; n--) {
 
 			object = { "data": {
-				"id"		: json[0].data.children[0].data.id,
-				"comment"	: marked(json[1].data.children[0].data.body),
-				"author"	: json[1].data.children[0].data.author
-				}
-			};
+				"author"	: page.data.children[n].data.author,
+				"column"	: col,
+				"subreddit"	: page.data.children[n].data.subreddit,
+				"index"		: n,
+				"title"		: page.data.children[n].data.title,
+				"permalink"	: page.data.children[n].data.permalink,
+				"url"		: page.data.children[n].data.url,
+				"id"		: page.data.children[n].data.id,
+				"domain"	: page.data.children[n].data.domain,
+				"over_18"	: page.data.children[n].data.over_18
+					}
+				};
 
-			// console.log(object.data);
+			// ids.push(article.data.id);
+	  		// article.data.url = fix(article.data.url, article.data.domain);
+			// article.data.column = column;
+			// new NewArticle(object);
 
-			comment = Mustache.render(commentTemplate, object.data);
-			// console.log("ul[data-id = '" + object.data.id + "']");
-			// console.log($.inArray( object.data.id, check ));
+			article = Mustache.render(articleTemplate, object.data);
 
-			if (jQuery.inArray( object.data.id, check ) == -1)
-			{	console.log(column);
-				// console.log($("#"+column).children());
-				if (ids.length > 25) {
-				$(comment).appendTo("li[data-id = '" + object.data.id + "']");
-					check.push(object.data.id);
-				}
+			array.push(article);
+			array2.push(object);
+			// this.stack.append(article);
 
-				else {
-				$("ul[data-column="+column+"]").children("li[data-id = '" + object.data.id + "']").append(comment);
-				console.log($("ul[data-column="+column+"]").children().val());
 			}
 
+			len = array.length;
+			stack = [];
+			for (var i = 0; i < 5; i++) {
+				if (len === 0){
+					return;
+				}
+				else{
+					stack[i]=(array.pop());
+				}
 			}
 
-		});
-		
-	}
-}
-	
-$("#wrapper").on('keyup', 'input' ,function(e){
+			this.stack.append(stack);
 
-		col = e.currentTarget.offsetParent.dataset.column;
-		elem = $("#"+col);
-		sub = "r/" + elem.val();
-		console.log(sub);
-   if(e.which === 13){
-   	elem.val() === "" ? sub = "" : sub = sub;
-	loadSubreddit(sub, 1, col);
-	elem.parent().remove();
-   }
+			for (i = 0; i < 5; i++) {
+				// console.log(object);
+				object = array2.pop();
+				new NewArticle(object, col);
+			}
+		},
+		complete: function() {
+			// console.log(array2);
+			stacks = this.col.find("ul");
+			oldStack = stacks.first();
+			newStack = stacks.last();
+            stacks.toggleClass("opacity");
+
+			if (stacks.length > 1){
+			height = oldStack.outerHeight();
+
+			oldStack.css({
+            	'transform':'translate(0,' +(0- height-20) + 'px)'
+            	// 'z-index'  :'-1'
+            });
+
+            newStack.toggleClass("start");
+
+            $("body").animate({ scrollTop: 0 }, 2000 );
+
+            window.setTimeout(function() {
+            	oldStack.remove();
+            }, 400);
+
+        	// stacks.first().remove();
+
+        	value = this.col.find("input").val();
+
+        	this.col.find("input").attr('placeholder',value);
+
+			}
+
+			else {oldStack.toggleClass("start");}
+
+		}
 });
 
 
-function fix(url, domain) {
-  		// console.log(object);
-  	if (domain == "i.imgur.com")
-  	{
-  		return url;
+}
+
+
+$(document).ready(function() {
+	//measure number of columns that will fit and set wrapper to total width
+	maxCols = Math.floor(window.innerWidth / 340);
+	$("#wrapper").css({'width': maxCols*340});
+
+	defaults = ["reddit", "r/pics", "r/funny", "r/aww", "r/gif"];
+
+	//build each column for width of screen
+	for (var i=0; i <= maxCols - 1; i++) {
+	object = {"data": {
+			"column": i,
+			"subreddit": i === 0 ? "" : defaults[i].slice(2)
+		}
+	};
+
+	html = Mustache.render(column, object.data);
+	$(html).appendTo("#wrapper");
+	//load default subreddit for respective column
+	new NewSubreddit(defaults[i], i);
 	}
-  	else if (domain == "imgur.com")
-	{
-  		return "http://i.imgur.com/" + url.slice(17) + "m.jpg";
-  	}
-  	else 
-  	{
-  		return "";
-  	}
 
-}
+	$(".column").on('keyup', 'input' ,function(e){
+		col = e.currentTarget.offsetParent.dataset.column;
+		elem = $("#"+col);
+		sub = "r/" + elem.val();
+   if(e.which === 13){
+   		elem.val() === "reddit" ? sub = "" : sub = sub;
+   		new NewSubreddit(sub, col);
 
-
-function getRandom(sub) {
-	$.get("http://reddit.com/"+sub, function(data){
-	console.log("randomfied");
-
-		console.log(data);
-		return data;
+   }
 	});
-}
 
-	// object = "blah.com";
-	// return object;
-  		// console.log(object);
-
-
-
-// test = $.getJSON(front);
-
-// console.log(info);
-  // console.log(json);
-  // console.log(front);
 
 });
 /**

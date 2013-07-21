@@ -1,9 +1,12 @@
-var colTemplate = '														\
-<ul class="column" data-column = {{column}} data-subreddit = {{subreddit}}>\
-	<input type="text" id={{column}} placeholder={{subreddit}}>						\
-	{{#articles}} 														\
-		{{{.}}} 														\
-	{{/articles}} 														\
+var column = '															\
+<div class = "column" data-column={{column}}>														\
+<span class = "r">r/</span><input id ={{column}} type="text" placeholder={{subreddit}}>	\
+</div>																	\
+';
+
+
+var subredditTemplate = '														\
+<ul class="stack" id = {{subreddit}}>						\
 </ul> 																	\
 ';
 
