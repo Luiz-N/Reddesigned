@@ -626,27 +626,6 @@ function NewSubreddit(subreddit, col) {
 
         	console.log(this.stack.outerHeight());
 
-	$(document).scroll(function() {
-
-        var top = $(document).scrollTop();
-        	console.log(this.stack);
-
-        if (top > 300) {
-
-        	console.log(this.stack);
-            // $('#one').show();
-        }
-        else if (top > 600) {
-            // $('#two').show();
-        } 
-        else {
-            // $('.feature').hide();
-        }   
-
-    });
-
-
-
 	var stack = this;
 	// console.log(link);
 	array = [];
@@ -711,6 +690,8 @@ function NewSubreddit(subreddit, col) {
 		},
 		complete: function() {
 			// console.log(array2);
+
+			// appendStack();
 			stacks = this.col.find("ul");
 			oldStack = stacks.first();
 			newStack = stacks.last();
@@ -751,8 +732,16 @@ function NewSubreddit(subreddit, col) {
 
 $(document).ready(function() {
 	//measure number of columns that will fit and set wrapper to total width
+	
+	if (window.innerWidth < 700){
+		maxCols = 1
+	$("#wrapper").css({'width': maxCols*340});
+	}
+	else{
 	maxCols = Math.floor(window.innerWidth / 340);
 	$("#wrapper").css({'width': maxCols*340});
+	}
+	
 
 	defaults = ["reddit", "r/pics", "r/funny", "r/aww", "r/gif"];
 
