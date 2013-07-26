@@ -46,17 +46,25 @@ body
   /*background-color: black;*/
   /*height: 500px;*/
   .stack
-    transition: all 1100ms ease-out
+    transition: all 900ms ease-out
+
     position: relative
     opacity: 0
     // z-index: -1
-    -webkit-transform : translateY(10000px)
+    -webkit-transform : translateY(1500px)
 
-  .start
+  .launch
     -webkit-transform : translateY(0px)
+    transition: all 1500ms ease-out
 
-  .opacity
+
     opacity: 1
+
+  .exit
+    opacity: 0
+    transition: all 250ms ease-out
+
+
   h1
     font-size: 1.5em
     padding: 0 10px
@@ -94,6 +102,9 @@ body
 .comment
   margin: 0
   padding: 0 10px
+
+.opacity
+  opacity: 0
 
 [data-column = "0"]
   left: 0

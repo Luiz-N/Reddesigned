@@ -102,87 +102,95 @@ body {
 }
 /* line 48, ../sass/style.sass */
 .column .stack {
-  transition: all 1100ms ease-out;
+  transition: all 900ms ease-out;
   position: relative;
   opacity: 0;
-  -webkit-transform: translateY(10000px);
+  -webkit-transform: translateY(1500px);
 }
-/* line 55, ../sass/style.sass */
-.column .start {
+/* line 56, ../sass/style.sass */
+.column .launch {
   -webkit-transform: translateY(0px);
-}
-/* line 58, ../sass/style.sass */
-.column .opacity {
+  transition: all 1500ms ease-out;
   opacity: 1;
 }
-/* line 60, ../sass/style.sass */
+/* line 63, ../sass/style.sass */
+.column .exit {
+  opacity: 0;
+  transition: all 250ms ease-out;
+}
+/* line 68, ../sass/style.sass */
 .column h1 {
   font-size: 1.5em;
   padding: 0 10px;
   text-align: center;
 }
-/* line 64, ../sass/style.sass */
+/* line 72, ../sass/style.sass */
 .column span {
   font-size: 2em;
   padding: 0 0.2em 0 0;
 }
-/* line 69, ../sass/style.sass */
+/* line 77, ../sass/style.sass */
 .column input {
   font-size: 2em;
   width: 200px;
 }
 
-/* line 74, ../sass/style.sass */
+/* line 82, ../sass/style.sass */
 .article {
   background-color: white;
   width: 100%;
   margin: 20px 0;
   color: #666666;
 }
-/* line 79, ../sass/style.sass */
+/* line 87, ../sass/style.sass */
 .article img {
   width: 100%;
 }
 
-/* line 82, ../sass/style.sass */
+/* line 90, ../sass/style.sass */
 [data-index="0"] {
   margin-top: 0;
 }
 
-/* line 89, ../sass/style.sass */
+/* line 97, ../sass/style.sass */
 .imageBox {
   border-radius: 5px;
   padding: 10px;
   border: 2px 0 outset;
 }
 
-/* line 94, ../sass/style.sass */
+/* line 102, ../sass/style.sass */
 .comment {
   margin: 0;
   padding: 0 10px;
 }
 
-/* line 98, ../sass/style.sass */
+/* line 106, ../sass/style.sass */
+.opacity {
+  opacity: 0;
+}
+
+/* line 109, ../sass/style.sass */
 [data-column="0"] {
   left: 0;
 }
 
-/* line 101, ../sass/style.sass */
+/* line 112, ../sass/style.sass */
 [data-column="1"] {
   left: 340px;
 }
 
-/* line 104, ../sass/style.sass */
+/* line 115, ../sass/style.sass */
 [data-column="2"] {
   left: 680px;
 }
 
-/* line 107, ../sass/style.sass */
+/* line 118, ../sass/style.sass */
 [data-column="3"] {
   left: 1020px;
 }
 
-/* line 110, ../sass/style.sass */
+/* line 121, ../sass/style.sass */
 [data-column="4"] {
   left: 1360px;
 }

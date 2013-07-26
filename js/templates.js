@@ -7,6 +7,9 @@ var column = '															\
 
 var subredditTemplate = '														\
 <ul class="stack" id = {{subreddit}}>						\
+	{{#stack}} 												\
+	{{{.}}} 												\
+	{{/stack}} 												\
 </ul> 																	\
 ';
 
