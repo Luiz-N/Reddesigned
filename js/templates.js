@@ -5,7 +5,7 @@ var column = '															\
 ';
 
 
-var subredditTemplate = '														\
+var newStack = '														\
 <ul class="stack" id = {{subreddit}}>						\
 	{{#stack}} 												\
 	{{{.}}} 												\

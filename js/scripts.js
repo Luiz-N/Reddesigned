@@ -541,7 +541,7 @@ var column = '															\
 ';
 
 
-var subredditTemplate = '														\
+var newStack = '														\
 <ul class="stack" id = {{subreddit}}>						\
 	{{#stack}} 												\
 	{{{.}}} 												\
@@ -576,20 +576,13 @@ function ActivateScrolling(col, articles, objects){
 	 // new NewStack(col, articles, objects);
 
 	// this.col = col;
-	console.log(col.outerHeight());
+	// col.outerHeight();
 	// elements = this.col.find("ul").last();
 
 	trigger = col.outerHeight() - col.find("ul").last().outerHeight();
-	console.log(trigger);
 
 	function testScroll(ev){
-	// console.log(colHeight = col.outerHeight()/3);
     if(window.pageYOffset>trigger){
-    	// console.log(col.parent().find(".stack").addClass("launch"));
-    	// console.log(col.siblings().each(function(){
-    	// 	$(this).trigger("load.next");
-    	// }));
-    	// console.log("past");
     }
 
 
@@ -601,65 +594,41 @@ function ActivateScrolling(col, articles, objects){
 function NewStack(col, articles, objects) {
 
 	// newSub = objects[objects.length-1].data.index === 0;
-	// console.log(objects[objects.length-1]);
 	len = articles.length;
-
 	stack = [];
-		for (var i = 0; i < len; i++) {
+
+		for (var i = 0; i < 5; i++) {
 			if (len === 0){
 				return;
 			}
 			else{
-				stack[i]=(articles.pop());
-				object = objects.pop();
 
-			new NewArticle(object.data.id, col.attr('data-column'));
+				stack[i]=(articles.pop());
+				// object = objects.pop();
+
 			}
 		}
 
-	col.append(html);
 
-		
+	this.html = Mustache.render(newStack, {
+		"subreddit"	  : object.data.subreddit,
+		"stack"   	  : stack
+		});
 
-    // stacks.toggleClass("opacity");
-    // console.log(last = objects.length-1);
-    // console.log(objects[last].data.index);
+	col.append(this.html);
 
-	    if (!firstLoad) {
-			oldStack = stacks.first();
-			arrivingStack = stacks.last();
+	for (var i = 0; i < 5; i++) {
+	new NewArticle(objects.pop().data.id, col.attr('data-column'));
+	}
 
-			height = oldStack.outerHeight();
-
-			// arrivingStack.css({
-		 //    	'transform':'translate(0,' +(0- height-20) + 'px)'
-		 //    	// 'opacity'  :'1'
-		 //    }).toggleClass('launch');
-			oldStack.toggleClass('exit');
-		    textBox = col.find("input").val("");
-			col.find("input").attr('placeholder',subreddit);
-
-			window.setTimeout(function(){
-				oldStack.remove();
-    			arrivingStack.toggleClass('launch');
-    		}, 200);
-	    }
-	    else{
-	  //   	display = Math.floor((Math.random()*700)+200);
-	  //   	window.setTimeout(function() {
-			// col.find("ul").first().addClass("launch");
-	  //   	}, display);
-	    }
-
-	    // new NewStack(col, articles, objects);
+	// new NewStack(col, articles, objects);
 	
-	
+
 
 	// col.on('load.next', NewStack(col, articles, objects));
 }
 
 function NewComment(id, parent){
-	// console.log(article.data.id);
 	url = "http://reddit.com/comments/" + id + ".json?limit=1&sort=hot&jsonp=?";
 
 	$.getJSON( url, function(json){
@@ -670,7 +639,6 @@ function NewComment(id, parent){
 			}
 		};
 		comment = Mustache.render(commentTemplate, object.data);
-		// console.log(parent);
 		parent.append(comment);
 
 
@@ -678,12 +646,11 @@ function NewComment(id, parent){
 
 }
 function NewArticle(id, col) {
-	console.log(id);
 	this.article = $("div[data-column="+col+"] " +"li[data-id="+id+"]");
 	this.url = this.article.find('img');
 
 	// console.log(this.article);
-	// console.log(object.data.id);
+
 
 	new NewComment(id, this.article);
 
@@ -697,6 +664,7 @@ function NewSubreddit(subreddit, col) {
 		subReddit = getRandom(subreddit);
 	}
 	else if (subreddit === "reddit") {
+		frontPage = true;
 		link = "http://reddit.com/" + "" + ".json?jsonp=?";
 	}
 	else {
@@ -705,113 +673,119 @@ function NewSubreddit(subreddit, col) {
 
 	this.col = $("div[data-column="+col+"]");
 
-	// console.log(this.col.children());
 
 	this.stack = this.col.children(".stack:last-child");
 
-    // console.log(this.stack.outerHeight());
-	this.articles = [];
+    this.articles = [];
 	this.objects = [];
 	var stack = this;
-	// console.log(link);
 
 
 	$.ajax( link, {
 		dataType: 'json',
 		context: stack,
 		success: function(page){
-			// console.log(page);
 
-		
-		// console.log(page.data.children[0]);
+			for (var n = page.data.children.length - 1; n >= 0; n--) {
 
-		for (var n = page.data.children.length - 1; n >= 0; n--) {
+				object = { "data": {
+					"author"	: page.data.children[n].data.author,
+					"column"	: col,
+					"subreddit"	: page.data.children[n].data.subreddit,
+					"index"		: n,
+					"title"		: page.data.children[n].data.title,
+					"permalink"	: page.data.children[n].data.permalink,
+					"url"		: page.data.children[n].data.url,
+					"id"		: page.data.children[n].data.id,
+					"domain"	: page.data.children[n].data.domain,
+					"over_18"	: page.data.children[n].data.over_18
+						}
+					};
 
-			object = { "data": {
-				"author"	: page.data.children[n].data.author,
-				"column"	: col,
-				"subreddit"	: page.data.children[n].data.subreddit,
-				"index"		: n,
-				"title"		: page.data.children[n].data.title,
-				"permalink"	: page.data.children[n].data.permalink,
-				"url"		: page.data.children[n].data.url,
-				"id"		: page.data.children[n].data.id,
-				"domain"	: page.data.children[n].data.domain,
-				"over_18"	: page.data.children[n].data.over_18
-					}
-				};
-
-			// ids.push(article.data.id);
-	  		// article.data.url = fix(article.data.url, article.data.domain);
-			// article.data.column = column;
-			// new NewArticle(object);
-
-			article = Mustache.render(articleTemplate, object.data);
-			new NewArticle(object.data.id, col);
+				article = Mustache.render(articleTemplate, object.data);
 
 
-			this.articles.push(article);
-			this.objects.push(object);
-			// this.stack.append(article);
+				this.articles.push(article);
+				this.objects.push(object);
 
-			}
+				// this.stack.append(article);
+
+				}
 
 		},
 		beforeSend: function(){
-			// console.log(stack);
-			// console.log(this.stack.remove());
-			console.log(x = $(this.col).find("ul").toggleClass("launch"));
+
+			x = $(this.col).find("ul").toggleClass("launch");
 		},
 
-		timeout: 3000,
+		timeout: 9000,
 
 		error: function() {
-		// x.parent().find("input").val
-			console.log(
-		x.parent().find("input").val("Not Found :(")
-				);
-		x.toggleClass("launch");
-		throw new Exception('Ajax error description');
+			// x.parent().find("input").val
+				console.log(
+			x.parent().find("input").val("Not Found :(")
+					);
+			x.toggleClass("launch");
+			throw new Exception('Ajax error description');
 		},
-		// crossDomain: true,
 
 		complete: function() {
-			// console.log(object.data.id);
-		x.remove();
-		firstSet = [];
 
-			for (var i = 0; i < 5; i++) {
-				firstSet[i]=(this.articles.pop());
+			x.remove();
+			firstSet = [];
+
+			for (i = 0; i < 5; i++) {
+				firstSet[i]=this.articles.pop();
+			}
+
+			if (subreddit == "reddit") {
+			this.col.find("input").attr('placeholder','reddit');
+			this.col.find("input").val('reddit');
+
+			}
+			else {
+			this.col.find("input").attr('placeholder',object.data.subreddit);
 			}
 
 
-		// subreddit = this.col.find("input").val();
-		console.log(this.col.find("input").attr('placeholder',object.data.subreddit));
-		html = Mustache.render(subredditTemplate, {
-			"subreddit"	  : object.data.subreddit,
-			"stack"   	  : firstSet
-			});
+			this.html = Mustache.render(newStack, {
+				"subreddit"	  : object.data.subreddit,
+				"stack"   	  : firstSet
+				});
 
-		this.col.append(html);
+			this.col.append(this.html);
 
-		randomDelay = Math.floor((Math.random()*800)+200);
-	    	window.setTimeout(function() {
-	    		// console.log($("#"+col).find("ul"));
-		$("div[data-column="+col+"]").find(".stack").first().addClass("launch");
-	    }, randomDelay);
+			for (i = 0; i < 5; i++) {
+				new NewArticle(this.objects.pop().data.id, col);
+			}
 
-		new NewStack(this.col, this.articles, this.objects);
+			randomDelay = Math.floor((Math.random()*800)+200);
+		    	window.setTimeout(function() {
+			$("div[data-column="+col+"]").find(".stack").first().addClass("launch");
+		    }, randomDelay);
 
+			new NewStack(this.col, this.articles, this.objects);
 
 		}
-});
+	});
 
+	// $(this.col).on('newStack', NewStack(this.col, this.articles, this.objects));
+	var self = this;
 
+	this.col.on('newStack', function() {
+		new NewStack(self.col, self.articles, self.objects);
+		// console.log(self.articles.length);
+		// alert("hi");
+
+	});
 }
 
 
 $(document).ready(function() {
+	trigger = $("#wrapper").find("ul").first();
+	// trigger = "";
     // $("body").animate({ scrollTop: 0 }, 200 );
+	frontPage = false;
 
 	//measure number of columns that will fit and set wrapper to total width
 	maxCols = Math.floor(window.innerWidth / 340);
@@ -836,16 +810,48 @@ $(document).ready(function() {
 	$(".column").on('keyup', 'input' ,function(e){
 		col = e.currentTarget.offsetParent.dataset.column;
 		elem = $("#"+col);
-		sub = "r/" + elem.val();
+		value = elem.val();
+		sub = "r/" + value;
    if(e.which === 13){
-   		elem.val() === "reddit" ? sub = "" : sub = sub;
-   		new NewSubreddit(sub, col);
+   		// elem.val() === "reddit" ? sub = "" : sub = sub;
+		if (value == 'reddit' || value == 'front' || value == '')
+		{
+		value = 'reddit';
+   		new NewSubreddit( value, col);
+		}
+		else
+		{
+   		new NewSubreddit( sub, col);
+   	}
 
    }
 	});
 
 
+
+	window.setTimeout(function(){
+			trigger = $("#wrapper").find("ul").first().outerHeight();
+    		stacks = $("#wrapper").find("ul");
+			window.onscroll=testScroll;
+			window.scrollTo(0,0);
+
+	},3500);
+	function testScroll(ev){
+	    if(window.pageYOffset>trigger){
+	    	stacks.addClass("launch");
+	    	$('.column').trigger('newStack');
+	    	// alert("new stacks");
+
+	    }
+
+	}
+ // setTimeout('window.scrollTo(0, 0);', 5000);
+
+
 });
+
+// $('.column').on('fdgdf', '.stack .launch', alert("new stack"));
+
 /**
  * marked - a markdown parser
  * Copyright (c) 2011-2013, Christopher Jeffrey. (MIT Licensed)
