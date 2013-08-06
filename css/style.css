@@ -158,39 +158,45 @@ body {
   padding: 10px;
   border: 2px 0 outset;
 }
+/* line 101, ../sass/style.sass */
+.imageBox p {
+  width: 100%;
+  color: red;
+}
 
-/* line 102, ../sass/style.sass */
+/* line 105, ../sass/style.sass */
 .comment {
+  color: black;
   margin: 0;
   padding: 0 10px;
 }
 
-/* line 106, ../sass/style.sass */
+/* line 110, ../sass/style.sass */
 .opacity {
   opacity: 0;
 }
 
-/* line 109, ../sass/style.sass */
+/* line 113, ../sass/style.sass */
 [data-column="0"] {
   left: 0;
 }
 
-/* line 112, ../sass/style.sass */
+/* line 116, ../sass/style.sass */
 [data-column="1"] {
   left: 340px;
 }
 
-/* line 115, ../sass/style.sass */
+/* line 119, ../sass/style.sass */
 [data-column="2"] {
   left: 680px;
 }
 
-/* line 118, ../sass/style.sass */
+/* line 122, ../sass/style.sass */
 [data-column="3"] {
   left: 1020px;
 }
 
-/* line 121, ../sass/style.sass */
+/* line 125, ../sass/style.sass */
 [data-column="4"] {
   left: 1360px;
 }

@@ -542,21 +542,22 @@ var column = '															\
 
 
 var newStack = '														\
-<ul class="stack" id = {{subreddit}}>						\
-	{{#stack}} 												\
-	{{{.}}} 												\
-	{{/stack}} 												\
+<ul class="stack" id = {{subreddit}}>									\
+	{{#stack}} 															\
+	{{{.}}} 															\
+	{{/stack}} 															\
 </ul> 																	\
 ';
 
 var articleTemplate = '													\
 <li class="article" data-index = {{index}} data-id = {{id}}>			\
 	<h1>{{{title}}}</h1>												\
-	{{#url}}															\
 	<div class = "imageBox">											\
+		<p class = "selfText">{{{selfText}}}</p>						\
+	{{#url}}															\
 		<img src="{{{url}}}">											\
-	</div>																\
 	{{/url}}															\
+	</div>																\
 </li>																	\
 ';
 
@@ -570,35 +571,61 @@ var commentTemplate = '													\
 																		\
 	</aside>															\
 ';
-
-
-function ActivateScrolling(col, articles, objects){
-	 // new NewStack(col, articles, objects);
-
-	// this.col = col;
-	// col.outerHeight();
-	// elements = this.col.find("ul").last();
-
-	trigger = col.outerHeight() - col.find("ul").last().outerHeight();
-
-	function testScroll(ev){
-    if(window.pageYOffset>trigger){
-    }
-
+function testScroll(ev){
+	if(window.pageYOffset>trigger){
+		col = stacks.indexOf(trigger);
+		currentSubreddit = $("div[data-column="+col+"]");
+		currentSubreddit.find(".stack").addClass("launch");
+		currentSubreddit.trigger('nextStack');
+		// $('.column').trigger('newStack');
+		// alert("new stacks");
+	}
 
 }
 
-	window.onscroll=testScroll;
+function fix(url, selfText){
+	imgur = url.toLowerCase().indexOf("imgur") >= 0;
+	last3 = url.substr(url.length - 4);
+
+
+	if(last3 === '.gif'){
+		return url;
+	}
+	else if (imgur && last3 === '.jpg'){
+		return url.substr(0, url.length-4) + "m.jpg";
+	}
+	else if (imgur && last3 === '.png'){
+		return url.substr(0, url.length-4) + "m.png";
+	}
+	else if(imgur){
+		return url + "m.jpg";
+	}
+	else if(last3 === '.jpg' || last3 === '.png'){
+		return url;
+	}
+	// else if()
+	else if( selfText == "") {
+
+	}
+	else{
+		// x = $("img[src="+"'"+url+"'"+"]");
+		return "";
+	}
+
+	// return "http://i.imgur.com/dB0L3A4m.jpg";
 }
 
 function NewStack(col, articles, objects) {
 
 	// newSub = objects[objects.length-1].data.index === 0;
 	len = articles.length;
+	colNumber = col.attr('data-column');
 	stack = [];
 
 		for (var i = 0; i < 5; i++) {
 			if (len === 0){
+				stacks[colNumber]=99999999999;
+				trigger = Array.min(stacks);
 				return;
 			}
 			else{
@@ -618,17 +645,26 @@ function NewStack(col, articles, objects) {
 	col.append(this.html);
 
 	for (var i = 0; i < 5; i++) {
-	new NewArticle(objects.pop().data.id, col.attr('data-column'));
+	new NewArticle(objects.pop().data.id, colNumber);
 	}
 
-	// new NewStack(col, articles, objects);
-	
+	console.log(stacks[colNumber]=col.outerHeight() - col.find(".stack").last().outerHeight())-700;
+	trigger = Array.min(stacks);
+
+	window.setTimeout(function() {
+		current = $("div[data-column="+col.attr('data-column')+"]");
+		console.log(stacks[col.attr('data-column')]=current.outerHeight() - current.find(".stack").last().outerHeight()-700);
+		trigger = Array.min(stacks);
+		// console.log(stacks);
+
+	}, 4000);
+	// col.find(".stack");
 
 
-	// col.on('load.next', NewStack(col, articles, objects));
+	// col.on('nextStack', NewStack(col, articles, objects));
 }
 
-function NewComment(id, parent){
+function NewComment(id, parentArticle){
 	url = "http://reddit.com/comments/" + id + ".json?limit=1&sort=hot&jsonp=?";
 
 	$.getJSON( url, function(json){
@@ -639,19 +675,23 @@ function NewComment(id, parent){
 			}
 		};
 		comment = Mustache.render(commentTemplate, object.data);
-		parent.append(comment);
-
+		parentArticle.append(comment);
 
 	});
 
 }
 function NewArticle(id, col) {
-	this.article = $("div[data-column="+col+"] " +"li[data-id="+id+"]");
+	this.subreddit = "div[data-column="+col+"] ";
+	this.article = $(this.subreddit +"li[data-id="+id+"]");
 	this.url = this.article.find('img');
 
+	// newUrl = fix(this.url.attr('src'));
+	// this.url.attr("src",newUrl);
 	// console.log(this.article);
-
-
+	// if(this.article.is(':last-child'))
+	// {
+	//     console.log($(this.subreddit).find(".stack"));
+	// }
 	new NewComment(id, this.article);
 
 }
@@ -673,18 +713,15 @@ function NewSubreddit(subreddit, col) {
 
 	this.col = $("div[data-column="+col+"]");
 
-
-	this.stack = this.col.children(".stack:last-child");
-
     this.articles = [];
 	this.objects = [];
 	var stack = this;
-
 
 	$.ajax( link, {
 		dataType: 'json',
 		context: stack,
 		success: function(page){
+			console.log(page);
 
 			for (var n = page.data.children.length - 1; n >= 0; n--) {
 
@@ -698,12 +735,12 @@ function NewSubreddit(subreddit, col) {
 					"url"		: page.data.children[n].data.url,
 					"id"		: page.data.children[n].data.id,
 					"domain"	: page.data.children[n].data.domain,
-					"over_18"	: page.data.children[n].data.over_18
+					"over18"	: page.data.children[n].data.over_18,
+					"selfText"	: marked(page.data.children[n].data.selftext)
 						}
 					};
-
+				object.data.url = fix(object.data.url, object.data.selfText);
 				article = Mustache.render(articleTemplate, object.data);
-
 
 				this.articles.push(article);
 				this.objects.push(object);
@@ -715,23 +752,27 @@ function NewSubreddit(subreddit, col) {
 		},
 		beforeSend: function(){
 
-			x = $(this.col).find("ul").toggleClass("launch");
+			exitingStack = $(this.col).find("ul").toggleClass("launch");
+			inputBox = exitingStack.parent().find("input");
+
 		},
 
 		timeout: 9000,
 
 		error: function() {
-			// x.parent().find("input").val
-				console.log(
-			x.parent().find("input").val("Not Found :(")
-					);
-			x.toggleClass("launch");
+			window.setTimeout(function() {
+				inputBox.val("");
+			}, 2000);
+			inputBox.val("Not Found :(");
+			exitingStack.toggleClass("launch");
 			throw new Exception('Ajax error description');
 		},
 
 		complete: function() {
 
-			x.remove();
+			exitingStack.remove();
+			// console.log(this.col);
+			// column = $("div[data-column="+col+"]");
 			firstSet = [];
 
 			for (i = 0; i < 5; i++) {
@@ -760,9 +801,10 @@ function NewSubreddit(subreddit, col) {
 			}
 
 			randomDelay = Math.floor((Math.random()*800)+200);
-		    	window.setTimeout(function() {
-			$("div[data-column="+col+"]").find(".stack").first().addClass("launch");
+		    window.setTimeout(function() {
+				$("div[data-column="+col+"]").find(".stack").first().addClass("launch");
 		    }, randomDelay);
+
 
 			new NewStack(this.col, this.articles, this.objects);
 
@@ -770,22 +812,19 @@ function NewSubreddit(subreddit, col) {
 	});
 
 	// $(this.col).on('newStack', NewStack(this.col, this.articles, this.objects));
+	// console.log(this.col.find(".stack"));
+
 	var self = this;
+	this.col.off('nextStack');
 
-	this.col.on('newStack', function() {
+	this.col.on('nextStack', function() {
 		new NewStack(self.col, self.articles, self.objects);
-		// console.log(self.articles.length);
-		// alert("hi");
-
 	});
 }
 
 
 $(document).ready(function() {
-	trigger = $("#wrapper").find("ul").first();
-	// trigger = "";
-    // $("body").animate({ scrollTop: 0 }, 200 );
-	frontPage = false;
+	// frontPage = false;
 
 	//measure number of columns that will fit and set wrapper to total width
 	maxCols = Math.floor(window.innerWidth / 340);
@@ -806,6 +845,16 @@ $(document).ready(function() {
 	//load default subreddit for respective column
 	new NewSubreddit(defaults[i], i);
 	}
+
+
+	Array.min = function( array ){
+       return Math.min.apply( Math, array );
+    };
+
+	stacks = [];
+	trigger = 10000;
+	window.onscroll=testScroll;
+
 
 	$(".column").on('keyup', 'input' ,function(e){
 		col = e.currentTarget.offsetParent.dataset.column;
@@ -828,23 +877,14 @@ $(document).ready(function() {
 	});
 
 
+	// window.setTimeout(function(){
+	// 		trigger = $("#wrapper").find("ul").first().outerHeight();
+ //    		stacks = $("#wrapper").find("ul");
+	// 		window.onscroll=testScroll;
+	// 		window.scrollTo(0,0);
 
-	window.setTimeout(function(){
-			trigger = $("#wrapper").find("ul").first().outerHeight();
-    		stacks = $("#wrapper").find("ul");
-			window.onscroll=testScroll;
-			window.scrollTo(0,0);
+	// },3500);
 
-	},3500);
-	function testScroll(ev){
-	    if(window.pageYOffset>trigger){
-	    	stacks.addClass("launch");
-	    	$('.column').trigger('newStack');
-	    	// alert("new stacks");
-
-	    }
-
-	}
  // setTimeout('window.scrollTo(0, 0);', 5000);
 
 

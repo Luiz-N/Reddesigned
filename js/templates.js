@@ -6,21 +6,22 @@ var column = '															\
 
 
 var newStack = '														\
-<ul class="stack" id = {{subreddit}}>						\
-	{{#stack}} 												\
-	{{{.}}} 												\
-	{{/stack}} 												\
+<ul class="stack" id = {{subreddit}}>									\
+	{{#stack}} 															\
+	{{{.}}} 															\
+	{{/stack}} 															\
 </ul> 																	\
 ';
 
 var articleTemplate = '													\
 <li class="article" data-index = {{index}} data-id = {{id}}>			\
 	<h1>{{{title}}}</h1>												\
-	{{#url}}															\
 	<div class = "imageBox">											\
+		<p class = "selfText">{{{selfText}}}</p>						\
+	{{#url}}															\
 		<img src="{{{url}}}">											\
-	</div>																\
 	{{/url}}															\
+	</div>																\
 </li>																	\
 ';
 
