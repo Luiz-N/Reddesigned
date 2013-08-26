@@ -13,7 +13,6 @@ $background: rgb(206, 227, 248)
 
 body
   background-color: $background
-
   text-align: center
 
 #topBar
@@ -21,12 +20,16 @@ body
   width: 100%
   overflow: hidden
   // height: 50px
-  color: red
   background-color: white
   text-align: left
   font-size: 2em
   font-family: helvetica
   // padding: 0
+  aside
+    position: absolute
+    right: 1px
+    top: 5px
+    color: red
   div
     float: left
     vertical-align: bottom
@@ -46,6 +49,7 @@ body
       font-size: 12px
       display: inline
     span
+      position: relative
       padding-top: 10px
       display: block
       vertical-align: baseline
@@ -54,6 +58,9 @@ body
     padding: .25em
     display: inline-block
     float: left
+    cursor: pointer
+    color: red
+
   
 
 
@@ -65,17 +72,22 @@ body
 
 
 
-
 .column
   // bottom: 1386px
   width: 320px
   list-style-type: none
   margin: 0 10px 
-  // display: inline-block
-  // float: left
   position: absolute
   /*background-color: black;*/
   /*height: 500px;*/
+  .sticky-wrapper
+    display: inline-block
+    width: 320px
+  .inputBox
+    z-index: 1
+    top: 0
+  .stuck
+    position: fixed
   .stack
     transition: all 900ms ease-out
 
@@ -87,13 +99,7 @@ body
   .launch
     -webkit-transform : translateY(0px)
     transition: all 1500ms ease-out
-
-
     opacity: 1
-
-  .exit
-    opacity: 0
-    transition: all 250ms ease-out
 
 
   h1
@@ -101,24 +107,29 @@ body
     padding: 0 10px
     text-align: center
     display: inline-block
-  span
+  .r
     font-size: 2em
     // width: 70px
     // display: inline-block
     padding: 0 .2em 0 0
   input
     font-size: 2em
-    width: 200px
+    width: 287px
     // z-index: 1
 
 .article
+  transition: all 850ms ease-out
+
   background-color: rgb(255, 255, 255)  
   width: 100%
   margin: 20px 0
   color: #666
+  word-wrap: break-word
+  // overflow: auto
   img
     width: 100%
-
+.opacity30
+  opacity: .3
 [data-index = "0"]
   margin-top: 0
 
@@ -129,15 +140,24 @@ body
 .imageBox
   border-radius: 5px
   padding: 10px
-  border: 2px 0 outset
+  border: 1px dotted outset
+  overflow: auto
+  max-height: 600px
   p
-    width: 100%
     color: red
 
 .comment
+  // overflow: auto
   color: black
   margin: 0
-  padding: 0 10px
+  padding: 10px
+  max-height: 250px
+  overflow: auto
+
+  p
+    display: inline
+  span
+    display: block
 
 .opacity
   opacity: 0

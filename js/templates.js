@@ -1,6 +1,6 @@
 var column = '															\
 <div class = "column" data-column={{column}}>														\
-<span class = "r">r/</span><input id ={{column}} type="text" placeholder={{subreddit}}>	\
+<div class="inputBox"><span class = "r">r/</span><input id ={{column}} type="text" placeholder={{subreddit}}>	</div>\
 </div>																	\
 ';
 
@@ -27,11 +27,9 @@ var articleTemplate = '													\
 
 var commentTemplate = '													\
 	<aside class = "comment">											\
-	<span>{{author}}</span>	said										\
-		<p> {{{comment}}} 												\
-		</p>															\
+		{{{comment}}} 												\
 																		\
-		<span>{{{name}}}</span>											\
+		<span>-{{{author}}}</span>											\
 																		\
 	</aside>															\
 ';
