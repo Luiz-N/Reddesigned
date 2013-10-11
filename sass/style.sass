@@ -2,6 +2,11 @@
 
 
 $background: rgb(206, 227, 248)
+$grey: #666666
+$lightgrey: fade-out(#666666,.85)
+$shadow: fade-out(#b0aaa5,.3)
+$white: fade-out(white,0)
+$invisible: fade-out(white,1)
 
 .cf:before 
   content: " " /* 1 */
@@ -12,7 +17,7 @@ $background: rgb(206, 227, 248)
   clear: both
 
 body
-  background-color: $background
+  background-color: $lightgrey
   text-align: center
 
 #topBar
@@ -45,9 +50,15 @@ body
     border-right: 1px #999 dotted
     border-left: 1px #999 dotted
     background-color: transparent
+    &:hover
+      box-shadow: inset 0 -11px 15px -5px $grey
     a
+      color: $grey
+      text-decoration: none
       font-size: 12px
       display: inline
+      &:hover
+        text-decoration: underline
     span
       position: relative
       padding-top: 10px
@@ -60,6 +71,7 @@ body
     float: left
     cursor: pointer
     color: red
+    font-family: baskerville
 
   
 
@@ -84,10 +96,36 @@ body
     display: inline-block
     width: 320px
   .inputBox
+    box-shadow: 1px 1px 6px #b0aaa5
+    border-radius: 3px
+    margin: 10px 0
     z-index: 1
     top: 0
+    background-color: $white
+    input
+      font-size: 2em
+      width: 280px
+      margin: 0
+      float: right
+    span.r
+      font-size: 2em
+      padding: 6px
+      float: left
+
   .stuck
     position: fixed
+    // background-color: $invisible
+    opacity: .7
+    &:hover
+      opacity: 1
+    // input
+    //   opacity: .6
+    // input:hover
+    //   opacity: 1
+    // input:focus
+    //   opacity: 1
+    // span
+    //   opacity: .6
   .stack
     transition: all 900ms ease-out
 
@@ -95,37 +133,46 @@ body
     opacity: 0
     // z-index: -1
     -webkit-transform : translateY(1500px)
-
+    -moz-transform: translateY(1500px)
+    transform: translateY(1500px)
   .launch
     -webkit-transform : translateY(0px)
+    -moz-transform: translateY(0px)
+    transform: translateY(0px)
     transition: all 1500ms ease-out
     opacity: 1
 
-
-  h1
+  #title
+    text-decoration: none
+    color: #666
     font-size: 1.5em
-    padding: 0 10px
+    background-color: $white
+    // padding: 10px 0 10px 0
+    padding: 10px
+    width: 100%
+    box-sizing: border-box
     text-align: center
     display: inline-block
-  .r
-    font-size: 2em
-    // width: 70px
-    // display: inline-block
-    padding: 0 .2em 0 0
-  input
-    font-size: 2em
-    width: 287px
-    // z-index: 1
+    position: relative
+    z-index: 1
+    // box-shadow: 0 1px 3px 0 rgba(0,0,0,0.33)
+
+    &:hover
+      text-decoration: underline
+      cursor: pointer
 
 .article
   transition: all 850ms ease-out
-
-  background-color: rgb(255, 255, 255)  
+  overflow: hidden
+  background-color: $invisible  
   width: 100%
   margin: 20px 0
   color: #666
   word-wrap: break-word
-  // overflow: auto
+  position: relative
+  border-radius: 3px
+  z-index: 1
+  box-shadow: 1px 1px 6px #b0aaa5
   img
     width: 100%
 .opacity30
@@ -138,26 +185,42 @@ body
 //   /*max-height: 200px;*/
 
 .imageBox
-  border-radius: 5px
-  padding: 10px
+  box-shadow: 1px 5px 6px $shadow
+  background-color: $white
+  padding: 1px 0
+  // padding-top: 10px
   border: 1px dotted outset
   overflow: auto
   max-height: 600px
+  position: relative
+  z-index: 1
   p
     color: red
 
 .comment
   // overflow: auto
-  color: black
+  // -webkit-transition: 
+  -webkit-transform: translateY(-250px)
+  // transition: all 9500ms ease-out
+  // transition: all 2500ms ease-out 3000ms
+
+  color: $grey
+  font-family: helvetica
   margin: 0
   padding: 10px
   max-height: 250px
   overflow: auto
-
+  background-color: $white
   p
     display: inline
   span
     display: block
+  a
+    color: $grey
+  &.drop
+    -webkit-transform: translateY(0px)
+    transition: all 800ms cubic-bezier(0.075, 0.82, 0.165, 1) 1700ms
+
 
 .opacity
   opacity: 0

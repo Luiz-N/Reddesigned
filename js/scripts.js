@@ -536,7 +536,7 @@
 }));
 var column = '															\
 <div class = "column" data-column={{column}}>														\
-<div class="inputBox"><span class = "r">r/</span><input id ={{column}} type="text" placeholder={{subreddit}}>	</div>\
+<div class="inputBox cf"><span class = "r">r/</span><input id ={{column}} type="text" placeholder={{subreddit}}>	</div>\
 </div>																	\
 ';
 
@@ -551,7 +551,7 @@ var newStack = '														\
 
 var articleTemplate = '													\
 <li class="article" data-index = {{index}} data-id = {{id}}>			\
-	<h1>{{{title}}}</h1>												\
+	<a id="title">{{{title}}}</a>												\
 	<div class = "imageBox">											\
 		<p class = "selfText">{{{selfText}}}</p>						\
 	{{#url}}															\
@@ -575,6 +575,12 @@ function testScroll(ev){
 		col = stacks.indexOf(trigger);
 		currentSubreddit = $("div[data-column="+col+"]");
 		currentSubreddit.find(".stack").addClass("launch");
+		currentSubreddit.find('.comment').addClass('drop');
+
+		setTimeout(function(){
+			// console.log(currentSubreddit.find('.comment'));
+			// currentSubreddit.find('.comment').addClass('drop');
+		},500);
 		currentSubreddit.trigger('nextStack');
 
 	// $.waypoints('refresh');
@@ -664,9 +670,7 @@ function NewStack(col, articles, objects) {
 				return;
 			}
 			else{
-
 				stack[i]=(articles.pop());
-				// object = objects.pop();
 			}
 		}
 
@@ -679,7 +683,8 @@ function NewStack(col, articles, objects) {
 	col.append(this.html);
 
 	for (var i = 0; i < 5; i++) {
-	new NewArticle(objects.pop().data.id, colNumber);
+		var article = objects.pop();
+		new NewArticle(article.data.id, colNumber, article);
 	}
 
 	stacks[colNumber]=col.outerHeight() - col.find(".stack").last().outerHeight()-700;
@@ -689,13 +694,20 @@ function NewStack(col, articles, objects) {
 		current = $("div[data-column="+col.attr('data-column')+"]");
 		stacks[col.attr('data-column')]=current.outerHeight() - current.find(".stack").last().outerHeight()-700;
 		trigger = Array.min(stacks);
-
 	}, 4000);
 	// col.find(".stack");
-	// waypoints.('refresh');
-	$.waypoints('refresh');
 
-	// col.on('nextStack', NewStack(col, articles, objects));
+}
+function NewArticle(id, col, object) {
+	this.subreddit = "div[data-column="+col+"] ";
+	this.article = $(this.subreddit +"li[data-id="+id+"]");
+	this.url = this.article.find('img');
+	// console.log(object);
+	this.article.find('a').attr('href', object.data.original);
+	// console.log(object);
+
+	new NewComment(id, this.article);
+
 }
 
 function NewComment(id, parentArticle){
@@ -711,38 +723,17 @@ function NewComment(id, parentArticle){
 		comment = Mustache.render(commentTemplate, object.data);
 		parentArticle.append(comment);
 		parentArticle.find('a').attr('target', '_blank');
+		console.log(parentArticle.parent().hasClass('launch'));
+		setTimeout(function(){
+			if (parentArticle.parent().hasClass('launch')) {
+				parentArticle.find('.comment').addClass('drop');
+			}
+		},1000)
 		// $('.article a').attr('target', '_blank');
 	});
 
 }
-function NewArticle(id, col) {
-	this.subreddit = "div[data-column="+col+"] ";
-	this.article = $(this.subreddit +"li[data-id="+id+"]");
-	this.url = this.article.find('img');
 
-	// newUrl = fix(this.url.attr('src'));
-	// this.url.attr("src",newUrl);
-	// if(this.article.is(':last-child'))
-	// {
-	// }
-	new NewComment(id, this.article);
-	// this.article.waypoint(function(){
-	// 	// alert("hit");
-	// 	$(this).removeClass('opacity30');
-	// 	},{offset:'90%'});
-	// this.article.waypoint(function(){
-	// // alert("hit");
-
-	// 	$(this).addClass('opacity30');
-	// },{offset:'120%'});
-	// this.article.waypoint(function(){
-	// // alert("hit");
-	// 	$(this).addClass('opacity30');
-	// },{offset:function(){
-	// 		return -$(this).height()/2;
-	// }
-	// });
-}
 
 function NewSubreddit(subreddit, col) {
 
@@ -778,6 +769,7 @@ function NewSubreddit(subreddit, col) {
 					"title"			: page.data.children[n].data.title,
 					"permalink"	: page.data.children[n].data.permalink,
 					"url"				: page.data.children[n].data.url,
+					"original"	: page.data.children[n].data.url,
 					"id"				: page.data.children[n].data.id,
 					"domain"		: page.data.children[n].data.domain,
 					"over18"		: page.data.children[n].data.over_18,
@@ -817,6 +809,7 @@ function NewSubreddit(subreddit, col) {
 		complete: function() {
 			$(this.col).find("ul").parent().find("input").val("");
 			$(this.col).find("ul").remove();
+			$(this.col).find('input').blur();
 			firstSet = [];
 
 			for (i = 0; i < 5; i++) {
@@ -841,12 +834,15 @@ function NewSubreddit(subreddit, col) {
 			this.col.append(this.html);
 
 			for (i = 0; i < 5; i++) {
-				new NewArticle(this.objects.pop().data.id, col);
+				var article = this.objects.pop();
+				new NewArticle(article.data.id, col, article);
 			}
 
 			randomDelay = Math.floor((Math.random()*800)+200);
 		    window.setTimeout(function() {
-				$("div[data-column="+col+"]").find(".stack").first().addClass("launch");
+		    	var currentStack = $("div[data-column="+col+"]");
+				currentStack.find(".stack").first().addClass("launch");
+
 		    }, randomDelay);
 
 
@@ -907,13 +903,6 @@ $(document).ready(function() {
 
 
 	$(".inputBox").waypoint('sticky');
-	// $(".article").waypoint(function(){
-
-	// },{
-	// 	offset: function() {
-	// 		return
-	// 	}
-	// });
 
 
 
@@ -967,20 +956,7 @@ $(document).ready(function() {
 	});
 
 
-	// window.setTimeout(function(){
-	// 		trigger = $("#wrapper").find("ul").first().outerHeight();
- //    		stacks = $("#wrapper").find("ul");
-	// 		window.onscroll=testScroll;
-	// 		window.scrollTo(0,0);
-
-	// },3500);
-
- // setTimeout('window.scrollTo(0, 0);', 5000);
-
-
 });
-
-// $('.column').on('fdgdf', '.stack .launch', alert("new stack"));
 
 /**
  * marked - a markdown parser

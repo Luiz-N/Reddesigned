@@ -1,6 +1,6 @@
 var column = '															\
 <div class = "column" data-column={{column}}>														\
-<div class="inputBox"><span class = "r">r/</span><input id ={{column}} type="text" placeholder={{subreddit}}>	</div>\
+<div class="inputBox cf"><span class = "r">r/</span><input id ={{column}} type="text" placeholder={{subreddit}}>	</div>\
 </div>																	\
 ';
 
@@ -15,7 +15,7 @@ var newStack = '														\
 
 var articleTemplate = '													\
 <li class="article" data-index = {{index}} data-id = {{id}}>			\
-	<h1>{{{title}}}</h1>												\
+	<a id="title">{{{title}}}</a>												\
 	<div class = "imageBox">											\
 		<p class = "selfText">{{{selfText}}}</p>						\
 	{{#url}}															\
