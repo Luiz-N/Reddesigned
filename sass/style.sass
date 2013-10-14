@@ -45,8 +45,8 @@ body
     margin: 0
     color: #666
     font-size: .5em
-    // color: buttontext
-    padding: 0 .25em
+    box-sizing: border-box
+    padding: 0.4em 2.25em
     border-right: 1px #999 dotted
     border-left: 1px #999 dotted
     background-color: transparent
@@ -57,6 +57,7 @@ body
       text-decoration: none
       font-size: 12px
       display: inline
+      display: none
       &:hover
         text-decoration: underline
     span
@@ -86,15 +87,17 @@ body
 
 .column
   // bottom: 1386px
-  width: 320px
+  // width: 320px
+  width: 420px
   list-style-type: none
-  margin: 0 10px 
-  position: absolute
+  margin: 0 15px 
+  // position: absolute
+  float: left
   /*background-color: black;*/
   /*height: 500px;*/
   .sticky-wrapper
     display: inline-block
-    width: 320px
+    width: 420px
   .inputBox
     box-shadow: 1px 1px 6px #b0aaa5
     border-radius: 3px
@@ -103,12 +106,12 @@ body
     top: 0
     background-color: $white
     input
-      font-size: 2em
-      width: 280px
+      font-size: 3em
+      width: 372px
       margin: 0
       float: right
     span.r
-      font-size: 2em
+      font-size: 3em
       padding: 6px
       float: left
 
@@ -118,17 +121,9 @@ body
     opacity: .7
     &:hover
       opacity: 1
-    // input
-    //   opacity: .6
-    // input:hover
-    //   opacity: 1
-    // input:focus
-    //   opacity: 1
-    // span
-    //   opacity: .6
   .stack
     transition: all 900ms ease-out
-
+    -webkit-transition: all 900ms ease-out
     position: relative
     opacity: 0
     // z-index: -1
@@ -145,7 +140,7 @@ body
   #title
     text-decoration: none
     color: #666
-    font-size: 1.5em
+    font-size: 2em
     background-color: $white
     // padding: 10px 0 10px 0
     padding: 10px
@@ -220,6 +215,9 @@ body
   &.drop
     -webkit-transform: translateY(0px)
     transition: all 800ms cubic-bezier(0.075, 0.82, 0.165, 1) 1700ms
+    -webkit-transition: all 800ms cubic-bezier(0.075, 0.82, 0.165, 1) 1700ms
+    -moz-transition: all 800ms cubic-bezier(0.075, 0.82, 0.165, 1) 1700ms
+
 
 
 .opacity

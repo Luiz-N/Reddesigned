@@ -42,10 +42,10 @@ function fix(url, selfText, articleID){
 		return url;
 	}
 	else if (imgur && last3 === '.jpg'){
-		return url.substr(0, url.length-4) + "m.jpg";
+		return url.substr(0, url.length-4) + "l.jpg";
 	}
 	else if (imgur && last3 === '.png'){
-		return url.substr(0, url.length-4) + "m.png";
+		return url.substr(0, url.length-4) + "l.png";
 	}
 	else if(imgurAlbum){
 		albumID = url.split("/a/").pop();
@@ -55,7 +55,7 @@ function fix(url, selfText, articleID){
 		// alert(albumID);
 	}
 	else if(imgur){
-		return url + "m.jpg";
+		return url + "l.jpg";
 	}
 	else if(last3 === '.jpg' || last3 === '.png'){
 		return url;
@@ -301,8 +301,8 @@ $(document).ready(function() {
 	// frontPage = false;
 
 	//measure number of columns that will fit and set wrapper to total width
-	maxCols = Math.floor(window.innerWidth / 340);
-	$("#wrapper").css({'width': maxCols*340});
+	maxCols = Math.floor(window.innerWidth / 450);
+	$("#wrapper").css({'width': maxCols*450});
 
 	defaults = ["reddit", "r/pics", "r/funny", "r/aww", "r/gifs"];
 
@@ -343,8 +343,8 @@ $(document).ready(function() {
 		new NewSubreddit(subreddit, column);
 	});
 
-	$(".links span").on("click", function(e) {
-		links = $(this).parent().children('a');
+	$(".links").on("click", function(e) {
+		links = $(this).children('a');
 		console.log(links);
 		columns = [];
 		columnLength = $(".column").length
