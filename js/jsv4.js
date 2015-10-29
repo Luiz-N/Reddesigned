@@ -38,7 +38,7 @@ function fix(url, selfText, articleID){
 	youtube = url.toLowerCase().indexOf("youtu") >= 0;
 
 
-	if(last3 === '.gifv'){
+	if(last3 === 'gifv'){
 		return url.substr(0, url.length-1);
 	}
 	else if(last3 === '.gif'){
