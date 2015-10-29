@@ -38,7 +38,10 @@ function fix(url, selfText, articleID){
 	youtube = url.toLowerCase().indexOf("youtu") >= 0;
 
 
-	if(last3 === '.gif'){
+	if(last3 === '.gifv'){
+		return url.substr(0, url.length-1);
+	}
+	else if(last3 === '.gif'){
 		return url;
 	}
 	else if (imgur && last3 === '.jpg'){
@@ -192,16 +195,16 @@ function NewSubreddit(subreddit, col) {
 				object = { "data": {
 					"author"		: page.data.children[n].data.author,
 					"column"		: col,
-					"subreddit"	: page.data.children[n].data.subreddit,
+					"subreddit"		: page.data.children[n].data.subreddit,
 					"index"			: n,
 					"title"			: page.data.children[n].data.title,
-					"permalink"	: page.data.children[n].data.permalink,
-					"url"				: page.data.children[n].data.url,
-					"original"	: page.data.children[n].data.url,
-					"id"				: page.data.children[n].data.id,
+					"permalink"		: page.data.children[n].data.permalink,
+					"url"			: page.data.children[n].data.url,
+					"original"		: page.data.children[n].data.url,
+					"id"			: page.data.children[n].data.id,
 					"domain"		: page.data.children[n].data.domain,
 					"over18"		: page.data.children[n].data.over_18,
-					"selfText"	: marked(page.data.children[n].data.selftext)
+					"selfText"		: marked(page.data.children[n].data.selftext)
 						}
 					};
 				object.data.url = fix(object.data.url, object.data.selfText, object.data.id);
