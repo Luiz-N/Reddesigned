@@ -610,7 +610,10 @@ function fix(url, selfText, articleID){
 	youtube = url.toLowerCase().indexOf("youtu") >= 0;
 
 
-	if(last3 === '.gif'){
+	if(last3 === 'gifv'){
+		return url.substr(0, url.length-1);
+	}
+	else if(last3 === '.gif'){
 		return url;
 	}
 	else if (imgur && last3 === '.jpg'){
