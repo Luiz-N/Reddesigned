@@ -955,6 +955,11 @@ $(document).ready(function() {
    }
 	});
 
+	$("#about").on('click',function (event) {
+		event.preventDefault();
+		window.open("https://github.com/Luiz-N/Reddesigned", "_blank")
+	})
+
 
 });
 
